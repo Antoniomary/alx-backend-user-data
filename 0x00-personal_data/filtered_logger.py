@@ -2,9 +2,11 @@
 """
 contains classes and functions for user-data management
 """
+from os import getenv
 from typing import List
-import re
 import logging
+import mysql.connector
+import re
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -61,7 +63,7 @@ def get_logger() -> logging.Logger:
     stream = logging.StreamHandler()
 
     # Instantiate RedactingFormatter with necessary fields
-    formatter = RedactingFormatter(PII_FIELDS)
+    formatter = RedactingFormatter(List(PII_FIELDS))
 
     # Set the formatter for the handler
     stream.setFormatter(formatter)
@@ -70,3 +72,18 @@ def get_logger() -> logging.Logger:
     user_data.addHandler(stream)
 
     return user_data
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """returns a connector to the database
+    """
+    username = getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    password = getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    database = getenv("PERSONAL_DATA_DB_NAME")
+    host = getenv("PERSONAL_DATA_DB_HOST", "localhost")
+
+    result = mysql.connector.connection.MySQLConnection(user=username,
+                                                        password=password,
+                                                        database=database,
+                                                        host=host)
+    return result
