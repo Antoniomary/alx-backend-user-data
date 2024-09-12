@@ -54,6 +54,9 @@ def get_logger() -> logging.Logger:
     # Set the logger level
     user_data.setLevel(logging.INFO)
 
+    # Does not propagate messages to other loggers
+    user_data.propagate = False
+
     # Create a stream handler
     stream = logging.StreamHandler()
 
