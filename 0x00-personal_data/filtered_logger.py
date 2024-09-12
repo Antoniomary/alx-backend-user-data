@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-contains the function filter_datum
+contains classes and functions for user-data management
 """
 from typing import List
 import re
@@ -40,3 +40,16 @@ def filter_datum(fields: List[str],
         pattern = "({}.)(.*?)({})".format(field, separator)
         message = re.sub(pattern, f"\\1{redaction}\\3", message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    """returns a logging.Logger object
+    """
+    user_data = logging.getLogger('user_data')
+    logging.setLevel('logging.INFO')
+    stream = logging.StreamHandler()
+    stream.setFormatter(RedactingFormatter)
+    return user_data
+
+
+PII_FIELDS = ["name", "email", "phone", "ssn", "password"]
