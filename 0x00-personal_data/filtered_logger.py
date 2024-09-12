@@ -42,14 +42,28 @@ def filter_datum(fields: List[str],
     return message
 
 
+PII_FIELDS = ["name", "email", "phone", "ssn", "password"]
+
+
 def get_logger() -> logging.Logger:
     """returns a logging.Logger object
     """
+    # Create (or get if it exists) the 'user_data' logger
     user_data = logging.getLogger('user_data')
-    logging.setLevel('logging.INFO')
+
+    # Set the logger level
+    user_data.setLevel(logging.INFO)
+
+    # Create a stream handler
     stream = logging.StreamHandler()
-    stream.setFormatter(RedactingFormatter)
+
+    # Instantiate RedactingFormatter with necessary fields
+    formatter = RedactingFormatter(PII_FIELDS)
+
+    # Set the formatter for the handler
+    stream.setFormatter(formatter)
+
+    # Add the handler to the logger
+    user_data.addHandler(stream)
+
     return user_data
-
-
-PII_FIELDS = ["name", "email", "phone", "ssn", "password"]
