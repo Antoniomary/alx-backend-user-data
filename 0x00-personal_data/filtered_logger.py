@@ -2,7 +2,7 @@
 """
 contains classes and functions for user-data management
 """
-from os import getenv
+from os import environ
 from typing import List
 import logging
 import mysql.connector
@@ -77,10 +77,10 @@ def get_logger() -> logging.Logger:
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """returns a connector to the database
     """
-    username = getenv("PERSONAL_DATA_DB_USERNAME", "root")
-    password = getenv("PERSONAL_DATA_DB_PASSWORD", "")
-    database = getenv("PERSONAL_DATA_DB_NAME")
-    host = getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    username = environ.get("PERSONAL_DATA_DB_USERNAME", "root")
+    password = environ.get("PERSONAL_DATA_DB_PASSWORD", "")
+    database = environ.get("PERSONAL_DATA_DB_NAME")
+    host = environ.get("PERSONAL_DATA_DB_HOST", "localhost")
 
     result = mysql.connector.connection.MySQLConnection(user=username,
                                                         password=password,
