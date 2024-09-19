@@ -3,6 +3,7 @@
 contains the SessionAuth class
 """
 from api.v1.auth.auth import Auth
+from models.user import User
 from uuid import uuid4
 
 
@@ -36,3 +37,13 @@ class SessionAuth(Auth):
             return None
 
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """
+        returns a User instance based on a cookie value
+        """
+        cookie = self.session_cookie(request)
+        if cookie:
+            user_id = self.user_id_for_session_id(cookie)
+            if user_id:
+                return User.get(user_id)
