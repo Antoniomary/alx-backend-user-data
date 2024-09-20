@@ -8,14 +8,14 @@ from os import getenv
 
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
-def create_user_login() -> str:
+def user_login() -> str:
     """ POST /api/v1//auth_session/login
     JSON body:
       - email
       - password
     Return:
       - User object JSON represented
-      - 400 if can't create the new User
+      - 400 if can't login user
     """
     email = None
     password = None
@@ -50,3 +50,21 @@ def create_user_login() -> str:
         pass
 
     return jsonify({"error": "Can't login user"}), 400
+
+
+@app_views.route('/auth_session/logout',
+                 methods=['DELETE'], strict_slashes=False)
+def logout():
+    """ POST /api/v1//auth_session/logout
+    Return:
+        - empty json if logged out
+        - 404 if not
+    """
+    from api.v1.app import auth
+
+    is_destroyed = auth.destroy_session(request)
+    if is_destroyed:
+        return jsonify({}), 200
+
+    abort(404)
+
