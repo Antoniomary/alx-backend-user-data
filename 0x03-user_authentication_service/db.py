@@ -55,7 +55,6 @@ class DB:
 
         try:
             user = self._session.query(User).filter_by(**kwargs).first()
-            print(user)
             if user:
                 return user
         except InvalidRequestError:
