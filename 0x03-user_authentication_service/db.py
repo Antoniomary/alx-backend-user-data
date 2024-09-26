@@ -49,7 +49,7 @@ class DB:
            as filtered by the method’s input arguments
         """
         if not kwargs:
-            raise NoResultFound
+            raise InvalidRequestError
 
         user = None
 
