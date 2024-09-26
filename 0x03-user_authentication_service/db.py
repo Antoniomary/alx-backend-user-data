@@ -53,6 +53,12 @@ class DB:
 
         user = None
 
+        valid_attributes = ['id', 'email', 'hashed_password',
+                            'session_id', 'reset_token']
+        for attr in kwargs.keys():
+            if attr not in valid_attributes:
+                raise InvalidRequestError
+
         try:
             user = self._session.query(User).filter_by(**kwargs).first()
             if user:
@@ -66,18 +72,14 @@ class DB:
     def update_user(self, user_id: int, **kwargs: dict) -> None:
         """updates a user’s attributes with kwargs passed
         """
-        if not user_id:
-            return
-
-        if not isinstance(user_id, int):
-            return
-
         user = self.find_user_by(id=user_id)
 
         valid_attributes = ['id', 'email', 'hashed_password',
                             'session_id', 'reset_token']
+
         for k, v in kwargs.items():
             if k not in valid_attributes:
                 raise ValueError
             setattr(user, k, v)
+
         self._session.commit()
