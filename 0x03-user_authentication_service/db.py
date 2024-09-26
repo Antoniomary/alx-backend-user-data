@@ -3,10 +3,10 @@
 """
 from sqlalchemy import create_engine
 from sqlalchemy.exc import InvalidRequestError
-from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
+from sqlalchemy.orm.exc import NoResultFound
 
 from user import (
     Base,
@@ -48,6 +48,9 @@ class DB:
         """returns the first row found in the users table
            as filtered by the method’s input arguments
         """
+        if not data:
+            raise InvalidRequestError()
+
         try:
             user = self._session.query(User).filter_by(**data).first()
             if user is None:
