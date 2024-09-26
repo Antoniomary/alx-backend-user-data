@@ -44,19 +44,16 @@ class DB:
 
         return user
 
-    def find_user_by(self, **data: dict) -> User:
+    def find_user_by(self, **kwargs: dict) -> User:
         """returns the first row found in the users table
            as filtered by the method’s input arguments
         """
-        if not data:
-            raise InvalidRequestError
-
         try:
-            user = self._session.query(User).filter_by(**data).first()
+            user = self._session.query(User).filter_by(**kwargs).first()
 
             if not user:
                 raise NoResultFound
 
             return user
-        except (InvalidRequestError, AttributeError):
+        except AttributeError:
             raise InvalidRequestError
