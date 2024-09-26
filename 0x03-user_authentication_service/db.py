@@ -52,7 +52,7 @@ class DB:
             raise InvalidRequestError()
 
         user = self._session.query(User).filter_by(**data).first()
-        if user is None:
+        if not user:
             raise NoResultFound()
 
         return user
