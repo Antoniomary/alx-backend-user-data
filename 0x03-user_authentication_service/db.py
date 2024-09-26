@@ -55,5 +55,5 @@ class DB:
                 raise NoResultFound
 
             return user
-        except AttributeError:
+        except InvalidRequestError:
             raise InvalidRequestError
