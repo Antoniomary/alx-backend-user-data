@@ -51,10 +51,8 @@ class DB:
         if not data:
             raise InvalidRequestError()
 
-        try:
-            user = self._session.query(User).filter_by(**data).first()
-            if user is None:
-                raise NoResultFound()
-            return user
-        except InvalidRequestError:
-            raise
+        user = self._session.query(User).filter_by(**data).first()
+        if user is None:
+            raise NoResultFound()
+
+        return user
