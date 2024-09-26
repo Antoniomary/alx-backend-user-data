@@ -48,17 +48,10 @@ class DB:
         """returns the first row found in the users table
            as filtered by the method’s input arguments
         """
-        possible_field = ['id',
-                          'email',
-                          'hashed_password',
-                          'session_id',
-                          'reset_token']
-        for info in data:
-            if info not in possible_field:
-                raise InvalidRequestError()
-
-        user = self._session.query(User).filter_by(**data).first()
-        if user is None:
-            raise NoResultFound()
-
-        return user
+        try:
+            user = self._session.query(User).filter_by(**data).first()
+            if user is None:
+                raise NoResultFound()
+            return user
+        except InvalidRequestError:
+            raise
