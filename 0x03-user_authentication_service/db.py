@@ -57,26 +57,8 @@ class DB:
             if info not in possible_field:
                 raise InvalidRequestError()
 
-        users = self._session.query(User).all()
-        found = False
-        for user in users:
-            for k, v in data.items():
-                if k == 'id' and user.id == v:
-                    found = True
-                elif k == 'email' and user.email == v:
-                    found = True
-                elif k == 'hashed_password' and user.hashed_password == v:
-                    found = True
-                elif k == 'session_id' and user.session_id == v:
-                    found = True
-                elif k == 'reset_token' and user.reset_token == v:
-                    found = True
-                else:
-                    found = False
-                    break
-
-            if found:
-                return user
-
-        if not found:
+        user = self._session.query(User).filter_by(**data).first()
+        if user is None:
             raise NoResultFound()
+
+        return user
