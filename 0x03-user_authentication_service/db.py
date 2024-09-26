@@ -53,9 +53,10 @@ class DB:
 
         try:
             user = self._session.query(User).filter_by(**data).first()
+
             if not user:
                 raise NoResultFound()
-        except (InvalidRequestError, Exception):
-            raise InvalidRequestError()
 
-        return user
+            return user
+        except InvalidRequestError:
+            raise
