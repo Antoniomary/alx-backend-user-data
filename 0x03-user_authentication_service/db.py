@@ -63,7 +63,7 @@ class DB:
         if not user:
             raise NoResultFound
 
-    def update_user(user_id: int, **kwargs: dict) -> None:
+    def update_user(self, user_id: int, **kwargs: dict) -> None:
         """updates a user’s attributes with kwargs passed
         """
         if not user_id:
@@ -73,8 +73,11 @@ class DB:
             return
 
         user = self.find_user_by(id=user_id)
-        try:
-            for k, v in kwargs.items():
-                setattr(user, k, v)
-        except Exception:
-            raise ValueError
+
+        valid_attributes = ['id', 'email', 'hashed_password',
+                            'session_id', 'reset_token']
+        for k, v in kwargs.items():
+            if k not in valid_attributes:
+                raise ValueError
+            setattr(user, k, v)
+        self._session.commit()
