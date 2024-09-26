@@ -49,13 +49,13 @@ class DB:
            as filtered by the method’s input arguments
         """
         if not data:
-            raise InvalidRequestError()
+            raise InvalidRequestError
 
         try:
             user = self._session.query(User).filter_by(**data).first()
 
             if not user:
-                raise NoResultFound()
+                raise NoResultFound
 
             return user
         except (InvalidRequestError, AttributeError):
