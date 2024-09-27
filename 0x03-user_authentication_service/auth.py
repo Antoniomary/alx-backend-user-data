@@ -3,6 +3,7 @@
 contains functionalities for authentication
 """
 import bcrypt
+import uuid
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -51,3 +52,9 @@ def _hash_password(password: str) -> bytes:
     """converts a str to a hashed byte and returns it
     """
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
+
+def _generate_uuid() -> str:
+    """return a string representation of a new UUID
+    """
+    return str(uuid.uuid4())
