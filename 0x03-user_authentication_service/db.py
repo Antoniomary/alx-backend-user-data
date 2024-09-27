@@ -44,7 +44,7 @@ class DB:
 
         return user
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """returns the first row found in the users table
            as filtered by the method’s input arguments
         """
@@ -69,7 +69,7 @@ class DB:
         if not user:
             raise NoResultFound
 
-    def update_user(self, user_id: int, **kwargs: dict) -> None:
+    def update_user(self, user_id: int, **kwargs) -> None:
         """updates a user’s attributes with kwargs passed
         """
         user = self.find_user_by(id=user_id)
