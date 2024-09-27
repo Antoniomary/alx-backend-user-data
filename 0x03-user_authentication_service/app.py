@@ -4,8 +4,10 @@ a flask app
 """
 from auth import Auth
 from flask import (
+    abort,
     Flask,
     jsonify,
+    make_response,
     request
 )
 
@@ -39,6 +41,30 @@ def create_user() -> dict:
         return jsonify({"message": "email already registered"}), 400
 
     return jsonify({"email": email, "message": "user created"})
+
+
+@app.route("/sessions", methods={"POST"})
+def login():
+    """logins user in
+    """
+    email = request.form.get('email')
+    passwd = request.form.get('password')
+
+    if not email:
+        return jsonify({"error": "email missing"})
+    if not passwd:
+        return jsonify({"error": "password missing"})
+
+    is_valid = AUTH.valid_login(email, passwd)
+    if not is_valid:
+        abort(401)
+
+    session_id = AUTH.create_session(email)
+
+    resp = make_response(jsonify({"email": email, "message": "logged in"}))
+    resp.set_cookie("session_id", session_id)
+
+    return resp
 
 
 if __name__ == "__main__":
