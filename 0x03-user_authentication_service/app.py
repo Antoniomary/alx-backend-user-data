@@ -124,7 +124,7 @@ def change_password():
     """
     email = request.form.get('email')
     reset_token = request.form.get('reset_token')
-    new_passord = request.form.get('new_password')
+    new_password = request.form.get('new_password')
 
     user = None
 
