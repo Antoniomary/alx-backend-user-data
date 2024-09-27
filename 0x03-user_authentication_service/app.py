@@ -8,7 +8,9 @@ from flask import (
     Flask,
     jsonify,
     make_response,
-    request
+    redirect,
+    request,
+    url_for
 )
 
 
@@ -23,7 +25,7 @@ def index() -> dict:
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route("/users", methods={"POST"})
+@app.route("/users", methods=["POST"])
 def create_user() -> dict:
     """registers a user
     """
@@ -43,7 +45,7 @@ def create_user() -> dict:
     return jsonify({"email": email, "message": "user created"})
 
 
-@app.route("/sessions", methods={"POST"})
+@app.route("/sessions", methods=["POST"])
 def login():
     """logins user in
     """
@@ -65,6 +67,23 @@ def login():
     resp.set_cookie("session_id", session_id)
 
     return resp
+
+
+@app.route("/sessions", methods=["DELETE"])
+def logout():
+    """logouts a user
+    """
+    session_id = request.cookies.get("session_id")
+
+    if session_id:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user:
+            AUTH.destroy_session(user_id)
+            redirect(url_for('/'))
+        else:
+            abort(403)
+
+    return jsonify({"error": "session id is missing"})
 
 
 if __name__ == "__main__":
