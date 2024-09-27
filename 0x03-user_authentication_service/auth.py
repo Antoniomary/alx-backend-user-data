@@ -47,6 +47,21 @@ class Auth:
 
         return False
 
+    def create_session(self, email: str) -> str:
+        """returns the session ID of a user based on the email passed
+        """
+        user = None
+
+        try:
+            user = self._db.find_user_by(email=email)
+        except NoResultFound:
+            return
+
+        session_id = _generate_uuid()
+        user.session_id = session_id
+
+        return session_id
+
 
 def _hash_password(password: str) -> bytes:
     """converts a str to a hashed byte and returns it
