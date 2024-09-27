@@ -104,7 +104,7 @@ def profile():
 
 @app.route("/reset_password", methods=["POST"])
 def get_reset_password_token():
-    """resets a user's password
+    """resets a user's reset_token
     """
     email = request.form.get('email')
 
@@ -116,6 +116,24 @@ def get_reset_password_token():
         abort(403)
 
     return jsonify({"email": email, "reset_token": token})
+
+
+@app.route("/reset_password", methods=["PUT"])
+def change_password():
+    """resets a user's password
+    """
+    email = request.form.get('email')
+    reset_token = request.form.get('reset_token')
+    new_passord = request.form.get('new_password')
+
+    user = None
+
+    try:
+        AUTH.update_password(reset_token=reset_token, password=new_password)
+    except ValueError:
+        abort(403)
+
+    return jsonify({"email": email, "message": "Password updated"})
 
 
 if __name__ == "__main__":
